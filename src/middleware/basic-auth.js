@@ -1,5 +1,5 @@
-const bcrypt = require('bcryptjs')
-const AuthService = require('../auth/auth');
+// const bcrypt = require('bcryptjs')
+const AuthService = require('../auth/auth-service');
 
 function requireAuth(req, res, next) {
     // console.log('requireAuth')
@@ -25,7 +25,7 @@ function requireAuth(req, res, next) {
                 if (!user) {
                     return res.status(401).json({ error: 'Unathorized request' })
                 }
-                return bcrypt.compare(tokenPassword, user.password)
+                return AuthService.comparePasswords(tokenPassword, user.password)
                     .then(passwordsMatch => {
                         if (!passwordsMatch) {
                             return res.status(401).json({ error: 'Unauthorized Request' })
@@ -34,7 +34,6 @@ function requireAuth(req, res, next) {
                         next();
                     })
                     .catch(next)
-
             }
         )
 }
