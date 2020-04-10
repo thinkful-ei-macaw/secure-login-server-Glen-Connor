@@ -25,18 +25,24 @@ function requireAuth(req, res, next) {
                 if (!user) {
                     return res.status(401).json({ error: 'Unathorized request' })
                 }
-                return AuthService.comparePasswords(tokenPassword, user.password)
-                    .then(passwordsMatch => {
-                        if (!passwordsMatch) {
-                            return res.status(401).json({ error: 'Unauthorized Request' })
-                        }
-                        req.user = user
-                        next();
-                    })
-                    .catch(next)
+                req.user = user
+                next();
+            })
+        .catch(next)
+
+
+    return AuthService.comparePasswords(tokenPassword, user.password)
+        .then(passwordsMatch => {
+            if (!passwordsMatch) {
+                return res.status(401).json({ error: 'Unauthorized Request' })
             }
-        )
+            req.user = user
+            next();
+        })
+        .catch(next)
 }
+
+
 
 
 module.exports = {
